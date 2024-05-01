@@ -1,0 +1,215 @@
+# include &lt;stdio.h&gt;
+# include &lt;conio.h&gt;
+# include &lt;alloc.h&gt;
+# include &lt;string.h&gt;
+# define null 0
+int size=0;
+void insert();
+void del();
+int search(char lab[]);
+void modify();
+void display();
+struct symbtab{
+char label[10];
+int addr;
+struct symtab *next;};
+struct symbtab *first,*last;
+void main(){
+int op;
+int y;
+char la[10];
+clrscr();
+do{
+printf(&quot;\nSYMBOL TABLE IMPLEMENTATION\n&quot;);
+printf(&quot;1. INSERT\n&quot;);
+printf(&quot;2. DISPLAY\n&quot;);
+printf(&quot;3. DELETE\n&quot;);
+printf(&quot;4. SEARCH\n&quot;);
+printf(&quot;5. MODIFY\n&quot;);
+printf(&quot;6. END\n&quot;);
+printf(&quot;Enter your option : &quot;);
+scanf(&quot;%d&quot;,&amp;op);
+switch(op){
+case 1:
+insert();
+display();
+break;
+case 2:
+display();
+break;
+case 3:
+del();
+display();
+break;
+case 4:
+printf(&quot;Enter the label to be searched : &quot;);
+
+scanf(&quot;%s&quot;,la);
+y=search(la);
+if(y==1){
+printf(&quot;The label is already in the symbol Table&quot;);
+}
+else{
+printf(&quot;The label is not found in the symbol table&quot;);
+}
+break;
+case 5:
+modify();
+display();
+break;
+case 6:
+break;
+}}
+while(op&lt;6);
+getch();}
+void insert(){
+int n;
+char l[10];
+printf(&quot;Enter the label : &quot;);
+scanf(&quot;%s&quot;,l);
+n=search(l);
+if(n==1){
+printf(&quot;The label already exists. Duplicate cant be inserted\n&quot;);
+}
+else{
+struct symbtab *p;
+p=malloc(sizeof(struct symbtab));
+strcpy(p-&gt;label,l);
+printf(&quot;Enter the address : &quot;);
+scanf(&quot;%d&quot;,&amp;p-&gt;addr);
+p-&gt;next=null;
+if(size==0){
+first=p;
+last=p;
+}
+else{
+last-&gt;next=p;
+last=p;
+}
+size++;
+}}
+void display(){
+int i;
+struct symbtab *p;
+p=first;
+
+printf(&quot;LABEL\tADDRESS\n&quot;);
+for(i=0;i&lt;size;i++){
+    printf(&quot;%s\t%d\n&quot;,p-&gt;label,p-&gt;addr);
+p=p-&gt;next;
+}}
+int search(char lab[]){
+int i,flag=0;
+struct symbtab *p;
+p=first;
+for(i=0;i&lt;size;i++){
+if(strcmp(p-&gt;label,lab)==0){
+flag=1;
+}
+p=p-&gt;next;
+}
+return flag;
+}
+void modify(){
+char l[10],nl[10];
+int add, choice, i, s;
+struct symbtab *p;
+p=first;
+printf(&quot;What do you want to modify?\n&quot;);
+printf(&quot;1. Only the label\n&quot;);
+printf(&quot;2. Only the address of a particular label\n&quot;);
+printf(&quot;3. Both the label and address\n&quot;);
+printf(&quot;Enter your choice : &quot;);
+scanf(&quot;%d&quot;,&amp;choice);
+switch(choice){
+case 1:
+printf(&quot;Enter the old label\n&quot;);
+scanf(&quot;%s&quot;,l);
+printf(&quot;Enter the new label\n&quot;);
+scanf(&quot;%s&quot;,nl);
+s=search(l);
+if(s==0){
+printf(&quot;NO such label&quot;);
+}
+else{
+for(i=0;i&lt;size;i++){
+if(strcmp(p-&gt;label,l)==0){
+strcpy(p-&gt;label,nl);
+}
+p=p-&gt;next;
+}}
+break;
+case 2:
+printf(&quot;Enter the label whose address is to modified\n&quot;);
+
+scanf(&quot;%s&quot;,l);
+printf(&quot;Enter the new address\n&quot;);
+scanf(&quot;%d&quot;,&amp;add);
+s=search(l);
+if(s==0){
+printf(&quot;NO such label&quot;);
+}
+else{
+for(i=0;i&lt;size;i++){
+if(strcmp(p-&gt;label,l)==0){
+p-&gt;addr=add;
+}
+p=p-&gt;next;
+}}
+break;
+case 3:
+printf(&quot;Enter the old label : &quot;);
+scanf(&quot;%s&quot;,l);
+printf(&quot;Enter the new label : &quot;);
+scanf(&quot;%s&quot;,nl);
+printf(&quot;Enter the new address : &quot;);
+scanf(&quot;%d&quot;,&amp;add);
+s=search(l);
+if(s==0){
+printf(&quot;NO such label&quot;);
+}
+else{
+for(i=0;i&lt;size;i++){
+if(strcmp(p-&gt;label,l)==0){
+strcpy(p-&gt;label,nl);
+p-&gt;addr=add;
+}
+p=p-&gt;next;
+}}
+break;
+}}
+void del(){
+int a;
+char l[10];
+struct symbtab *p,*q;
+p=first;
+printf(&quot;Enter the label to be deleted\n&quot;);
+scanf(&quot;%s&quot;,l);
+a=search(l);
+if(a==0){
+printf(&quot;Label not found\n&quot;);
+}
+else{
+
+if(strcmp(first-&gt;label,l)==0){
+first=first-&gt;next;
+}
+else if(strcmp(last-&gt;label,l)==0){
+q=p-&gt;next;
+while(strcmp(q-&gt;label,l)!=0){
+p=p-&gt;next;
+q=q-&gt;next;
+}
+p-&gt;next=null;
+last=p;
+}
+else{
+q=p-&gt;next;
+while(strcmp(q-&gt;label,l)!=0){
+p=p-&gt;next;
+q=q-&gt;next;
+}
+p-&gt;next=q-&gt;next;
+}
+size--;
+}}
